@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Qanciye Exchange — Exchange</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-sky-50 to-white min-h-screen font-sans">
+  <div class="max-w-lg mx-auto p-6">
+    <header class="mb-6">
+      <h1 class="text-2xl font-semibold text-sky-700">💸 Qanciye Exchange</h1>
+      <p class="text-sm text-gray-600">Send EVC → 1xBet (USSD simulation)</p>
+    </header>
+
+    <main class="bg-white p-6 rounded-2xl shadow">
+      <form id="exchangeForm" class="space-y-4">
+        <div>
+          <label class="block text-sm text-gray-700">Full name</label>
+          <input id="name" required class="w-full mt-1 p-3 rounded-xl border" placeholder="Your name">
+        </div>
+
+        <div>
+          <label class="block text-sm text-gray-700">Amount (SOS or USD)</label>
+          <input id="amount" required inputmode="numeric" pattern="[0-9]*" class="w-full mt-1 p-3 rounded-xl border" placeholder="e.g. 50">
+        </div>
+
+        <div>
+          <label class="block text-sm text-gray-700">EVC number (sender)</label>
+          <input id="evcNumber" required inputmode="tel" class="w-full mt-1 p-3 rounded-xl border" placeholder="e.g. 0612345678">
+          <p class="text-xs text-gray-500 mt-1">Format: 0612345678 (we will auto-prefix +252 when needed)</p>
+        </div>
+
+        <div class="flex gap-3">
+          <button id="sendBtn" type="button" class="flex-1 bg-sky-600 text-white rounded-xl py-3 font-medium hover:bg-sky-700">
+            Send (Open Phone Keypad)
+          </button>
+          <button id="previewBtn" type="button" class="bg-white border rounded-xl py-3 px-4 hover:bg-sky-50">
+            Preview Code
+          </button>
+        </div>
+      </form>
+
+      <!-- Desktop fallback / preview -->
+      <div id="previewArea" class="mt-4 hidden">
+        <p class="text-sm text-gray-700">USSD Code:</p>
+        <div class="mt-2 flex items-center gap-2">
+          <code id="ussdCode" class="flex-1 bg-gray-100 p-3 rounded-lg text-sm"></code>
+          <button id="copyCode" class="px-3 py-2 bg-sky-600 text-white rounded-lg">Copy</button>
+        </div>
+        <p class="text-xs text-gray-500 mt-2">On mobile this will open your phone dialer with the code prefilled.</p>
+      </div>
+
+      <!-- After user triggers dialer and completes payment -->
+      <div id="afterSend" class="mt-6 hidden">
+        <p class="text-green-600 font-medium">✅ USSD code opened in your phone. After completing the payment, press <strong>Done</strong> below to send verification on WhatsApp.</p>
+        <div class="mt-3 flex gap-3">
+          <button id="doneBtn" class="flex-1 bg-green-600 text-white rounded-xl py-3 hover:bg-green-700">Done — Send WhatsApp</button>
+          <button id="cancelBtn" class="flex-1 bg-gray-100 rounded-xl py-3 hover:bg-gray-200">Cancel</button>
+        </div>
+      </div>
+    </main>
+
+    <!-- Transaction history -->
+    <section class="mt-6">
+      <h2 class="text-lg font-semibold text-gray-800 mb-2">Transaction History</h2>
+      <ul id="historyList" class="space-y-2"></ul>
+      <div class="mt-3">
+        <button id="clearHistory" class="text-sm text-red-600">🗑 Clear History</button>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    // Config
+    const MERCHANT_NUMBER = '617392380'; // Qanciye merchant number (without country code)
+    const WHATSAPP_NUMBER = '252617392380'; // whatsapp to confirm
+
+    // Helpers
+    const el = id => document.getElementById(id);
+    const isMobile = () => /Mobi|Android|iPhone/i.test(navigator.userAgent);
+
+    // Elements
+    const sendBtn = el('sendBtn');
+    const previewBtn = el('previewBtn');
+    const ussdCodeEl = el('ussdCode');
+    const previewArea = el('previewArea');
+    const previewCopy = el('copyCode');
+    const afterSend = el('afterSend');
+    const doneBtn = el('doneBtn');
+    const cancelBtn = el('cancelBtn');
+    const historyList = el('historyList');
+    const clearHistory = el('clearHistory');
+
+    // Local Storage functions
+    function loadTransactions() {
+      return JSON.parse(localStorage.getItem('transactions') || '[]');
+    }
+    function saveTransaction(tx) {
+      const arr = loadTransactions();
+      arr.unshift(tx);
+      localStorage.setItem('transactions', JSON.stringify(arr));
+    }
+    function renderHistory() {
+      const arr = loadTransactions();
+      historyList.innerHTML = arr.map(t => 
+        `<li class="p-3 bg-white rounded-xl shadow-sm border">
+          <div class="flex justify-between items-center">
+            <div>
+              <div class="font-medium">${t.name} • ${t.amount}</div>
+              <div class="text-xs text-gray-500">${t.date}</div>
+            </div>
+            <div class="text-sm text-green-600">${t.status}</div>
+          </div>
+        </li>`).join('') || '<li class="text-sm text-gray-500">No transactions yet.</li>';
+    }
+
+    // Build USSD string (e.g., *712*617392380*50#)
+    function buildUssd(amount) {
+      // Remove non-digits from amount
+      const digits = String(amount).replace(/[^\d.]/g,'');
+      // USSD: *712*MERCHANT*AMOUNT#
+      return `*712*${MERCHANT_NUMBER}*${digits}#`;
+    }
+
+    // Encode for tel: (hash must be encoded as %23)
+    function ussdToTelHref(ussd) {
+      // RFC: encode # as %23 and keep * and digits; encode spaces
+      return 'tel:' + encodeURIComponent(ussd).replace(/%2A/g,'*').replace(/%23/g,'%23');
+    }
+
+    // Event: Preview
+    previewBtn.addEventListener('click', () => {
+      const amount = el('amount').value.trim();
+      if (!amount) { alert('Enter amount'); return; }
+      const ussd = buildUssd(amount);
+      ussdCodeEl.textContent = ussd;
+      previewArea.classList.remove('hidden');
+    });
+
+    // Copy code
+    previewCopy.addEventListener('click', async () => {
+      const code = ussdCodeEl.textContent;
+      if (!code) return;
+      await navigator.clipboard.writeText(code);
+      alert('USSD code copied to clipboard');
+    });
+
+    // Send -> open dialer on mobile or show preview on desktop
+    sendBtn.addEventListener('click', () => {
+      const name = el('name').value.trim();
+      const amount = el('amount').value.trim();
+      let evc = el('evcNumber').value.trim();
+
+      if (!name || !amount || !evc) {
+        alert('Please fill all fields (name, amount, evc number).');
+        return;
+      }
+
+      // Normalize evc number: if starts with 0 -> prefix +252
+      evc = evc.replace(/\s+/g,'');
+      if (evc.startsWith('0')) evc = '+252' + evc.slice(1);
+      else if (!evc.startsWith('+')) evc = '+252' + evc; // if user typed 61xxxx -> becomes +25261xxxx
+
+      const ussd = buildUssd(amount);
+      ussdCodeEl.textContent = ussd;
+
+      if (isMobile()) {
+        // Open phone dialer with USSD prefilled
+        const href = ussdToTelHref(ussd);
+        // First save a pending transaction (status: Pending)
+        const tx = {
+          id: Date.now(),
+          name, amount, evc, merchant: MERCHANT_NUMBER,
+          ussd, date: new Date().toLocaleString(), status: 'Pending'
+        };
+        saveTransaction(tx);
+        renderHistory();
+
+        // Show afterSend UI
+        afterSend.classList.remove('hidden');
+
+        // Open dialer (this will open phone's dialer with the USSD string)
+        // Use setTimeout so UI updates before navigation
+        setTimeout(() => {
+          window.location.href = href;
+        }, 300);
+      } else {
+        // Desktop fallback: show preview and copy instructions
+        previewArea.classList.remove('hidden');
+        alert('You are on desktop. The dialer cannot be opened. Copy the USSD code and paste it on your phone to send.');
+      }
+    });
+
+    // Done -> send WhatsApp confirmation and mark transaction Success
+    doneBtn.addEventListener('click', () => {
+      // Get the latest pending transaction
+      const arr = loadTransactions();
+      const pending = arr.find(t => t.status === 'Pending') || arr[0];
+      if (!pending) {
+        alert('No pending transaction found.');
+        return;
+      }
+
+      // Update status to Success
+      pending.status = 'Success';
+      // replace in storage
+      const rest = arr.filter(t => t.id !== pending.id);
+      rest.unshift(pending);
+      localStorage.setItem('transactions', JSON.stringify(rest));
+
+      renderHistory();
+      afterSend.classList.add('hidden');
+
+      // Prepare WhatsApp message
+      const msg = encodeURIComponent(
+        `Hello Qanciye Exchange Team,\nI just sent EVC payment for 1xBet exchange.\nName: ${pending.name}\nAmount: ${pending.amount}\nEVC Number: ${pending.evc}\nUSSD used: ${pending.ussd}`
+      );
+
+      // Open WhatsApp chat (uses wa.me)
+      const waUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`;
+      window.open(waUrl, '_blank');
+    });
+
+    cancelBtn.addEventListener('click', () => {
+      afterSend.classList.add('hidden');
+      // Optionally remove the last pending tx
+      const arr = loadTransactions();
+      const rest = arr.filter(t => t.status !== 'Pending');
+      localStorage.setItem('transactions', JSON.stringify(rest));
+      renderHistory();
+    });
+
+    // Clear history
+    clearHistory.addEventListener('click', () => {
+      if (confirm('Clear all transaction history?')) {
+        localStorage.removeItem('transactions');
+        renderHistory();
+      }
+    });
+
+    // Init
+    renderHistory();
+  </script>
+</body>
+</html>
