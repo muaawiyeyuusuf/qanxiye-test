@@ -1,246 +1,548 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Qanciye Exchange — Exchange</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Qanciye Exchange</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .nav-link {
+            position: relative;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background-color: #0ea5e9;
+            transition: width 0.3s ease;
+        }
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #ffffff 0%, #e0f2fe 100%);
+        }
+        .shadow-custom {
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+    </style>
 </head>
-<body class="bg-gradient-to-br from-sky-50 to-white min-h-screen font-sans">
-  <div class="max-w-lg mx-auto p-6">
-    <header class="mb-6">
-      <h1 class="text-2xl font-semibold text-sky-700">💸 Qanciye Exchange</h1>
-      <p class="text-sm text-gray-600">Send EVC → 1xBet (USSD simulation)</p>
-    </header>
+<body class="gradient-bg font-sans min-h-screen flex flex-col">
 
-    <main class="bg-white p-6 rounded-2xl shadow">
-      <form id="exchangeForm" class="space-y-4">
-        <div>
-          <label class="block text-sm text-gray-700">Full name</label>
-          <input id="name" required class="w-full mt-1 p-3 rounded-xl border" placeholder="Your name">
+<!-- NAVBAR -->
+<nav class="bg-white shadow-md sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+        <a href="#" class="text-sky-700 font-bold text-xl flex items-center">
+            <i class="fas fa-exchange-alt text-sky-500 mr-2"></i>
+            Qanciye Exchange
+        </a>
+        <ul class="hidden md:flex gap-6">
+            <li><a href="#" class="nav-link text-gray-700 hover:text-sky-700" data-target="home">Home</a></li>
+            <li><a href="#" class="nav-link text-gray-700 hover:text-sky-700" data-target="exchange">Exchange</a></li>
+            <li><a href="#" class="nav-link text-gray-700 hover:text-sky-700" data-target="about">About</a></li>
+            <li><a href="#" class="nav-link text-gray-700 hover:text-sky-700" data-target="contact">Contact</a></li>
+            <li><a href="#" class="nav-link text-gray-700 hover:text-sky-700" data-target="login">Login/Signup</a></li>
+        </ul>
+        <div class="md:hidden">
+            <button id="mobileMenuBtn" class="text-sky-600">
+                <i class="fas fa-bars text-xl"></i>
+            </button>
         </div>
-
-        <div>
-          <label class="block text-sm text-gray-700">Amount (SOS or USD)</label>
-          <input id="amount" required inputmode="numeric" pattern="[0-9]*" class="w-full mt-1 p-3 rounded-xl border" placeholder="e.g. 50">
+    </div>
+    
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="hidden md:hidden bg-white py-4 px-6 absolute w-full left-0 top-full shadow-lg">
+        <div class="flex flex-col space-y-4">
+            <a href="#" class="text-sky-600 hover:text-sky-800 font-medium transition-colors" data-target="home">Home</a>
+            <a href="#" class="text-sky-600 hover:text-sky-800 font-medium transition-colors" data-target="exchange">Exchange</a>
+            <a href="#" class="text-sky-600 hover:text-sky-800 font-medium transition-colors" data-target="about">About</a>
+            <a href="#" class="text-sky-600 hover:text-sky-800 font-medium transition-colors" data-target="contact">Contact</a>
+            <a href="#" class="text-sky-600 hover:text-sky-800 font-medium transition-colors" data-target="login">Login/Signup</a>
         </div>
+    </div>
+</nav>
 
-        <div>
-          <label class="block text-sm text-gray-700">EVC number (sender)</label>
-          <input id="evcNumber" required inputmode="tel" class="w-full mt-1 p-3 rounded-xl border" placeholder="e.g. 0612345678">
-          <p class="text-xs text-gray-500 mt-1">Format: 0612345678 (we will auto-prefix +252 when needed)</p>
+<main class="flex-grow max-w-4xl mx-auto mt-10 px-6 pb-16">
+
+    <!-- HOME -->
+    <section id="home" class="page fade-in">
+        <h1 class="text-3xl md:text-5xl font-bold text-sky-700 text-center">Qanciye Exchange</h1>
+        <p class="mt-4 text-gray-600 text-center text-lg">EVC Plus to 1xBet Exchange — Safe, Fast & Mobile‑Friendly</p>
+        <div class="text-center mt-6">
+            <button class="bg-sky-600 text-white px-8 py-3 rounded-xl hover:bg-sky-700 transition" data-target="exchange">Start Exchanging</button>
         </div>
-
-        <div class="flex gap-3">
-          <button id="sendBtn" type="button" class="flex-1 bg-sky-600 text-white rounded-xl py-3 font-medium hover:bg-sky-700">
-            Send (Open Phone Keypad)
-          </button>
-          <button id="previewBtn" type="button" class="bg-white border rounded-xl py-3 px-4 hover:bg-sky-50">
-            Preview Code
-          </button>
-        </div>
-      </form>
-
-      <!-- Desktop fallback / preview -->
-      <div id="previewArea" class="mt-4 hidden">
-        <p class="text-sm text-gray-700">USSD Code:</p>
-        <div class="mt-2 flex items-center gap-2">
-          <code id="ussdCode" class="flex-1 bg-gray-100 p-3 rounded-lg text-sm"></code>
-          <button id="copyCode" class="px-3 py-2 bg-sky-600 text-white rounded-lg">Copy</button>
-        </div>
-        <p class="text-xs text-gray-500 mt-2">On mobile this will open your phone dialer with the code prefilled.</p>
-      </div>
-
-      <!-- After user triggers dialer and completes payment -->
-      <div id="afterSend" class="mt-6 hidden">
-        <p class="text-green-600 font-medium">✅ USSD code opened in your phone. After completing the payment, press <strong>Done</strong> below to send verification on WhatsApp.</p>
-        <div class="mt-3 flex gap-3">
-          <button id="doneBtn" class="flex-1 bg-green-600 text-white rounded-xl py-3 hover:bg-green-700">Done — Send WhatsApp</button>
-          <button id="cancelBtn" class="flex-1 bg-gray-100 rounded-xl py-3 hover:bg-gray-200">Cancel</button>
-        </div>
-      </div>
-    </main>
-
-    <!-- Transaction history -->
-    <section class="mt-6">
-      <h2 class="text-lg font-semibold text-gray-800 mb-2">Transaction History</h2>
-      <ul id="historyList" class="space-y-2"></ul>
-      <div class="mt-3">
-        <button id="clearHistory" class="text-sm text-red-600">🗑 Clear History</button>
-      </div>
-    </section>
-  </div>
-
-  <script>
-    // Config
-    const MERCHANT_NUMBER = '617392380'; // Qanciye merchant number (without country code)
-    const WHATSAPP_NUMBER = '252617392380'; // whatsapp to confirm
-
-    // Helpers
-    const el = id => document.getElementById(id);
-    const isMobile = () => /Mobi|Android|iPhone/i.test(navigator.userAgent);
-
-    // Elements
-    const sendBtn = el('sendBtn');
-    const previewBtn = el('previewBtn');
-    const ussdCodeEl = el('ussdCode');
-    const previewArea = el('previewArea');
-    const previewCopy = el('copyCode');
-    const afterSend = el('afterSend');
-    const doneBtn = el('doneBtn');
-    const cancelBtn = el('cancelBtn');
-    const historyList = el('historyList');
-    const clearHistory = el('clearHistory');
-
-    // Local Storage functions
-    function loadTransactions() {
-      return JSON.parse(localStorage.getItem('transactions') || '[]');
-    }
-    function saveTransaction(tx) {
-      const arr = loadTransactions();
-      arr.unshift(tx);
-      localStorage.setItem('transactions', JSON.stringify(arr));
-    }
-    function renderHistory() {
-      const arr = loadTransactions();
-      historyList.innerHTML = arr.map(t => 
-        `<li class="p-3 bg-white rounded-xl shadow-sm border">
-          <div class="flex justify-between items-center">
-            <div>
-              <div class="font-medium">${t.name} • ${t.amount}</div>
-              <div class="text-xs text-gray-500">${t.date}</div>
+        
+        <div class="mt-12 grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="bg-white p-6 rounded-2xl shadow-custom">
+                <div class="flex justify-center mb-4">
+                    <div class="w-16 h-16 bg-sky-100 rounded-full flex items-center justify-center">
+                        <i class="fas fa-exchange-alt text-sky-500 text-2xl"></i>
+                    </div>
+                </div>
+                <h3 class="text-xl font-bold text-center text-sky-700 mb-4">Why Choose Qanciye?</h3>
+                <ul class="space-y-3">
+                    <li class="flex items-start">
+                        <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                        <span>Instant transfers to your 1xBet account</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                        <span>Secure and encrypted transactions</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                        <span>24/7 customer support via WhatsApp</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                        <span>Competitive exchange rates</span>
+                    </li>
+                </ul>
             </div>
-            <div class="text-sm text-green-600">${t.status}</div>
-          </div>
+            
+            <div class="bg-white p-6 rounded-2xl shadow-custom">
+                <div class="flex justify-center mb-4">
+                    <div class="w-16 h-16 bg-sky-100 rounded-full flex items-center justify-center">
+                        <i class="fas fa-shield-alt text-sky-500 text-2xl"></i>
+                    </div>
+                </div>
+                <h3 class="text-xl font-bold text-center text-sky-700 mb-4">How It Works</h3>
+                <ol class="space-y-3 list-decimal list-inside">
+                    <li class="text-gray-700">Enter your details and 1xBet ID</li>
+                    <li class="text-gray-700">Generate USSD code for payment</li>
+                    <li class="text-gray-700">Send payment via phone dialer</li>
+                    <li class="text-gray-700">Confirm via WhatsApp for verification</li>
+                    <li class="text-gray-700">Funds credited to your 1xBet account</li>
+                </ol>
+            </div>
+        </div>
+    </section>
+
+    <!-- LOGIN / SIGNUP -->
+    <section id="login" class="page hidden fade-in">
+        <div class="max-w-md mx-auto bg-white p-8 rounded-3xl shadow-lg">
+            <h2 class="text-2xl font-semibold text-sky-700 mb-6 text-center" id="loginTitle">Login</h2>
+            <form id="authForm" class="space-y-4">
+                <div id="nameDiv" class="hidden">
+                    <label class="block text-gray-700 font-medium">Full Name</label>
+                    <input type="text" id="authName" class="w-full mt-1 p-3 border rounded-xl" placeholder="Your Name">
+                </div>
+                <div>
+                    <label class="block text-gray-700 font-medium">Username</label>
+                    <input type="text" id="authUsername" class="w-full mt-1 p-3 border rounded-xl" placeholder="Username">
+                </div>
+                <div>
+                    <label class="block text-gray-700 font-medium">Password</label>
+                    <input type="password" id="authPassword" class="w-full mt-1 p-3 border rounded-xl" placeholder="Password">
+                </div>
+                <button type="submit" class="w-full bg-sky-600 text-white py-3 rounded-xl hover:bg-sky-700 transition" id="authBtn">Login</button>
+            </form>
+            <p class="text-sm mt-3 text-gray-600 text-center" id="authSwitch">Don't have an account? <span class="text-sky-700 cursor-pointer" id="switchAuth">Signup</span></p>
+        </div>
+    </section>
+
+    <!-- EXCHANGE -->
+    <section id="exchange" class="page hidden fade-in">
+        <div class="bg-white p-8 rounded-3xl shadow-lg">
+            <h2 class="text-2xl font-semibold text-sky-700 mb-6 text-center"> Exchange EVC to 1xBet</h2>
+            <form id="exchangeForm" class="space-y-4">
+                <div>
+                    <label class="block text-gray-700 font-medium">Full Name</label>
+                    <input id="name" required class="w-full mt-1 p-3 border rounded-xl" placeholder="Your Name">
+                </div>
+                <div>
+                    <label class="block text-gray-700 font-medium">Amount</label>
+                    <input id="amount" required inputmode="numeric" pattern="[0-9]*" class="w-full mt-1 p-3 border rounded-xl" placeholder="e.g. 50">
+                </div>
+                <div>
+                    <label class="block text-gray-700 font-medium">EVC Number (sender)</label>
+                    <input id="evcNumber" required inputmode="tel" class="w-full mt-1 p-3 border rounded-xl" placeholder="0612345678">
+                    <p class="text-xs text-gray-500 mt-1">If you enter 0612345678 it will be converted to +252612345678 automatically.</p>
+                </div>
+                <div>
+                    <label class="block text-gray-700 font-medium">1xBet ID (receiver account)</label>
+                    <input id="oneXbetId" required class="w-full mt-1 p-3 border rounded-xl" placeholder="Your 1xBet ID (e.g. 12345678)">
+                    <p class="text-xs text-gray-500 mt-1">Enter your 1xBet account ID so admin can credit your 1xBet balance after verification.</p>
+                </div>
+                <div class="flex gap-3 mt-4">
+                    <button id="sendBtn" type="button" class="flex-1 bg-sky-600 text-white py-3 rounded-xl hover:bg-sky-700 transition">Send (Phone Keypad)</button>
+                    <button id="previewBtn" type="button" class="flex-1 bg-gray-100 py-3 rounded-xl hover:bg-sky-50 transition">Preview Code</button>
+                </div>
+            </form>
+
+            <div id="previewArea" class="mt-4 hidden">
+                <p class="text-sm text-gray-700">USSD Code:</p>
+                <div class="mt-2 flex items-center gap-2">
+                    <code id="ussdCode" class="flex-1 bg-gray-100 p-3 rounded-lg text-sm"></code>
+                    <button id="copyCode" class="px-3 py-2 bg-sky-600 text-white rounded-lg hover:bg-sky-700">Copy</button>
+                </div>
+            </div>
+
+            <div id="afterSend" class="mt-6 hidden">
+                <p class="text-green-600 font-medium">USSD opened. After sending, click "Done" to notify via WhatsApp (automatic message includes 1xBet ID).</p>
+                <div class="mt-3 flex gap-3">
+                    <button id="doneBtn" class="flex-1 bg-green-600 text-white py-3 rounded-xl hover:bg-green-700">Done — WhatsApp</button>
+                    <button id="cancelBtn" class="flex-1 bg-gray-100 py-3 rounded-xl hover:bg-gray-200">Cancel</button>
+                </div>
+            </div>
+        </div>
+
+        <section class="mt-6">
+            <h2 class="text-lg font-semibold text-gray-800 mb-2">Transaction History</h2>
+            <ul id="historyList" class="space-y-2"></ul>
+            <div class="mt-3">
+                <button id="clearHistory" class="text-sm text-red-600">🗑 Clear History</button>
+            </div>
+        </section>
+    </section>
+
+    <!-- ABOUT -->
+    <section id="about" class="page hidden fade-in">
+        <h2 class="text-2xl font-semibold text-sky-700 mb-4">About Qanciye Exchange</h2>
+        <p class="text-gray-600 leading-relaxed">Qanciye Exchange is a professional, mobile-friendly platform to simulate EVC Plus payments to 1xBet. It helps users understand and complete their transactions in a safe and reliable way. We provide manual verification via WhatsApp to ensure funds are credited correctly.</p>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
+            <div class="bg-white p-6 rounded-xl shadow-custom">
+                <div class="flex items-center mb-4">
+                    <div class="w-12 h-12 bg-sky-100 rounded-full flex items-center justify-center mr-4">
+                        <i class="fas fa-bullseye text-sky-500 text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-sky-700">Our Mission</h3>
+                </div>
+                <p class="text-gray-600">Our mission is to provide a secure, fast, and reliable platform for converting EVC Plus balances to 1xBet funds.</p>
+            </div>
+            
+            <div class="bg-white p-6 rounded-xl shadow-custom">
+                <div class="flex items-center mb-4">
+                    <div class="w-12 h-12 bg-sky-100 rounded-full flex items-center justify-center mr-4">
+                        <i class="fas fa-shield-alt text-sky-500 text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-sky-700">Security & Reliability</h3>
+                </div>
+                <p class="text-gray-600">We implement the highest security standards to protect your transactions and ensure a smooth exchange process.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact" class="page hidden fade-in">
+        <h2 class="text-2xl font-semibold text-sky-700 mb-4">Contact Us</h2>
+        <p class="text-gray-600">WhatsApp: <a href="https://wa.me/+252615444857" target="_blank" class="text-sky-600">+252 615444857</a></p>
+        <p class="text-gray-600">Email: <a href="mailto:support@qanciyexchange.com" class="text-sky-600">support@qanciyexchange.com</a></p>
+        
+        <div class="bg-white p-6 rounded-xl shadow-custom mt-6">
+            <h3 class="text-xl font-bold text-sky-700 mb-4">Get In Touch</h3>
+            <div class="space-y-4">
+                <div class="flex items-start">
+                    <div class="w-10 h-10 bg-sky-100 rounded-full flex items-center justify-center mr-4">
+                        <i class="fab fa-whatsapp text-green-500"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-gray-800">WhatsApp</h4>
+                        <p class="text-gray-600">+252615444857</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-start">
+                    <div class="w-10 h-10 bg-sky-100 rounded-full flex items-center justify-center mr-4">
+                        <i class="fas fa-envelope text-sky-500"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-gray-800">Email</h4>
+                        <p class="text-gray-600">support@qanciyeexchange.com</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-start">
+                    <div class="w-10 h-10 bg-sky-100 rounded-full flex items-center justify-center mr-4">
+                        <i class="fas fa-clock text-sky-500"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-gray-800">Working Hours</h4>
+                        <p class="text-gray-600">24/7, including weekends and holidays</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<!-- FOOTER -->
+<footer class="bg-sky-800 text-white py-8 mt-12">
+    <div class="max-w-7xl mx-auto px-6">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div>
+                <div class="flex items-center mb-4">
+                    <i class="fas fa-exchange-alt text-white text-2xl mr-2"></i>
+                    <h3 class="text-xl font-bold">Qanciye Exchange</h3>
+                </div>
+                <p class="text-sky-100">Secure and fast money exchange from EVC Plus to 1xBet funds with 24/7 customer support.</p>
+            </div>
+            
+            <div>
+                <h4 class="text-lg font-bold mb-4">Quick Links</h4>
+                <ul class="space-y-2">
+                    <li><a href="#" class="text-sky-100 hover:text-white transition-colors" data-target="home">Home</a></li>
+                    <li><a href="#" class="text-sky-100 hover:text-white transition-colors" data-target="exchange">Exchange</a></li>
+                    <li><a href="#" class="text-sky-100 hover:text-white transition-colors" data-target="about">About</a></li>
+                    <li><a href="#" class="text-sky-100 hover:text-white transition-colors" data-target="contact">Contact</a></li>
+                </ul>
+            </div>
+            
+            <div>
+                <h4 class="text-lg font-bold mb-4">Contact Info</h4>
+                <ul class="space-y-2">
+                    <li class="flex items-start">
+                        <i class="fab fa-whatsapp text-green-400 mt-1 mr-2"></i>
+                        <span class="text-sky-100">+252615444857</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fas fa-envelope text-sky-300 mt-1 mr-2"></i>
+                        <span class="text-sky-100">support@qanciyeexchange.com</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="border-t border-sky-700 mt-8 pt-6 text-center text-sky-200">
+            <p>&copy; 2023 Qanciye Exchange. All rights reserved.</p>
+        </div>
+    </div>
+</footer>
+
+<script>
+// Basic navigation (single-file pages)
+const pages = document.querySelectorAll('.page');
+const navLinks = document.querySelectorAll('.nav-link');
+const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+const mobileMenu = document.getElementById('mobileMenu');
+
+function showPage(id){
+    pages.forEach(p => p.classList.add('hidden'));
+    const page = document.getElementById(id);
+    if(page) page.classList.remove('hidden');
+    
+    // Close mobile menu when navigating
+    mobileMenu.classList.add('hidden');
+}
+
+navLinks.forEach(link => {
+    link.addEventListener('click', e => {
+        e.preventDefault();
+        const target = link.dataset.target;
+        showPage(target);
+    });
+});
+
+// Toggle mobile menu
+mobileMenuBtn.addEventListener('click', () => {
+    mobileMenu.classList.toggle('hidden');
+});
+
+// Config
+const MERCHANT_NUMBER = '61544857<';
+const WHATSAPP_NUMBER = '25261544857';
+
+// Auth system (simple localStorage)
+let isLoginMode = true;
+let currentUser = null;
+
+const authForm = document.getElementById('authForm');
+const authBtn = document.getElementById('authBtn');
+const authTitle = document.getElementById('loginTitle');
+const switchAuth = document.getElementById('switchAuth');
+const nameDiv = document.getElementById('nameDiv');
+const startBtns = document.querySelectorAll('[data-target="exchange"]');
+const exchangeSection = document.getElementById('exchange');
+const loginSection = document.getElementById('login');
+
+function getUsers(){ return JSON.parse(localStorage.getItem('users')||'[]'); }
+function saveUser(user){ const arr=getUsers(); arr.push(user); localStorage.setItem('users', JSON.stringify(arr)); }
+function findUser(username,password){ return getUsers().find(u=>u.username===username && u.password===password); }
+
+function showLogin(){ isLoginMode=true; authTitle.textContent='Login'; authBtn.textContent='Login'; nameDiv.classList.add('hidden'); switchAuth.textContent='Signup'; }
+function showSignup(){ isLoginMode=false; authTitle.textContent='Signup'; authBtn.textContent='Signup'; nameDiv.classList.remove('hidden'); switchAuth.textContent='Login'; }
+
+switchAuth.addEventListener('click', ()=> { isLoginMode ? showSignup() : showLogin(); });
+
+authForm.addEventListener('submit', e=>{
+    e.preventDefault();
+    const username = document.getElementById('authUsername').value.trim();
+    const password = document.getElementById('authPassword').value.trim();
+    const name = document.getElementById('authName').value.trim();
+    if(isLoginMode){
+        const user = findUser(username,password);
+        if(!user){ alert('Invalid credentials'); return; }
+        currentUser = user;
+    } else {
+        if(!name){ alert('Enter full name'); return; }
+        if(getUsers().some(u=>u.username===username)){ alert('Username taken'); return; }
+        const user = { name, username, password };
+        saveUser(user);
+        currentUser = user;
+        alert('Signup successful');
+    }
+    loginSection.classList.add('hidden');
+    exchangeSection.classList.remove('hidden');
+    document.getElementById('name').value = currentUser.name;
+});
+
+// Start exchange buttons behavior
+startBtns.forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+        if(currentUser){
+            loginSection.classList.add('hidden');
+            exchangeSection.classList.remove('hidden');
+            document.getElementById('name').value = currentUser.name;
+        } else {
+            loginSection.classList.remove('hidden');
+            exchangeSection.classList.add('hidden');
+        }
+    });
+});
+
+// Exchange logic
+const el = id => document.getElementById(id);
+const isMobile = ()=> /Mobi|Android|iPhone/i.test(navigator.userAgent);
+
+const sendBtn = el('sendBtn');
+const previewBtn = el('previewBtn');
+const ussdCodeEl = el('ussdCode');
+const previewArea = el('previewArea');
+const previewCopy = el('copyCode');
+const afterSend = el('afterSend');
+const doneBtn = el('doneBtn');
+const cancelBtn = el('cancelBtn');
+const historyList = el('historyList');
+const clearHistory = el('clearHistory');
+
+function loadTransactions(){ return JSON.parse(localStorage.getItem('transactions')||'[]'); }
+function saveTransaction(tx){ const arr = loadTransactions(); arr.unshift(tx); localStorage.setItem('transactions', JSON.stringify(arr)); }
+function renderHistory(){
+    const arr = loadTransactions();
+    historyList.innerHTML = arr.map(t=>`
+        <li class="p-3 bg-white rounded-xl shadow-sm border flex justify-between items-start gap-4">
+            <div class="flex-1">
+                <div class="font-medium">${t.name} • ${t.amount} SOS</div>
+                <div class="text-xs text-gray-500">${t.date}</div>
+                <div class="text-xs text-gray-500 mt-1">EVC: ${t.evc}</div>
+                <div class="text-xs text-gray-500">1xBet ID: ${t.oneXbetId || '-'}</div>
+            </div>
+            <div class="text-sm ${t.status==='Success'?'text-green-600':'text-yellow-600'}">${t.status}</div>
         </li>`).join('') || '<li class="text-sm text-gray-500">No transactions yet.</li>';
-    }
+}
 
-    // Build USSD string (e.g., *712*617392380*50#)
-    function buildUssd(amount) {
-      // Remove non-digits from amount
-      const digits = String(amount).replace(/[^\d.]/g,'');
-      // USSD: *712*MERCHANT*AMOUNT#
-      return `*712*${MERCHANT_NUMBER}*${digits}#`;
-    }
+function buildUssd(amount){ const digits = String(amount).replace(/[^\d.]/g,''); return `*712*${MERCHANT_NUMBER}*${digits}#`; }
+function ussdToTelHref(ussd){ return 'tel:'+encodeURIComponent(ussd).replace(/%2A/g,'*').replace(/%23/g,'%23'); }
 
-    // Encode for tel: (hash must be encoded as %23)
-    function ussdToTelHref(ussd) {
-      // RFC: encode # as %23 and keep * and digits; encode spaces
-      return 'tel:' + encodeURIComponent(ussd).replace(/%2A/g,'*').replace(/%23/g,'%23');
-    }
+previewBtn.addEventListener('click', ()=>{
+    const amount = el('amount').value.trim();
+    if(!amount){ alert('Enter amount'); return; }
+    const ussd = buildUssd(amount);
+    ussdCodeEl.textContent = ussd;
+    previewArea.classList.remove('hidden');
+});
 
-    // Event: Preview
-    previewBtn.addEventListener('click', () => {
-      const amount = el('amount').value.trim();
-      if (!amount) { alert('Enter amount'); return; }
-      const ussd = buildUssd(amount);
-      ussdCodeEl.textContent = ussd;
-      previewArea.classList.remove('hidden');
-    });
+previewCopy.addEventListener('click', async ()=>{
+    const code = ussdCodeEl.textContent;
+    if(!code) return;
+    await navigator.clipboard.writeText(code);
+    alert('USSD code copied');
+});
 
-    // Copy code
-    previewCopy.addEventListener('click', async () => {
-      const code = ussdCodeEl.textContent;
-      if (!code) return;
-      await navigator.clipboard.writeText(code);
-      alert('USSD code copied to clipboard');
-    });
+sendBtn.addEventListener('click', ()=>{
+    const name = el('name').value.trim();
+    const amount = el('amount').value.trim();
+    let evc = el('evcNumber').value.trim();
+    const oneXbetId = el('oneXbetId').value.trim();
 
-    // Send -> open dialer on mobile or show preview on desktop
-    sendBtn.addEventListener('click', () => {
-      const name = el('name').value.trim();
-      const amount = el('amount').value.trim();
-      let evc = el('evcNumber').value.trim();
+    if(!name || !amount || !evc || !oneXbetId){ alert('Fill all fields (including 1xBet ID)'); return; }
 
-      if (!name || !amount || !evc) {
-        alert('Please fill all fields (name, amount, evc number).');
-        return;
-      }
+    evc = evc.replace(/\s+/g,'');
+    if(evc.startsWith('0')) evc = '+252' + evc.slice(1);
+    else if(!evc.startsWith('+')) evc = '+252' + evc;
 
-      // Normalize evc number: if starts with 0 -> prefix +252
-      evc = evc.replace(/\s+/g,'');
-      if (evc.startsWith('0')) evc = '+252' + evc.slice(1);
-      else if (!evc.startsWith('+')) evc = '+252' + evc; // if user typed 61xxxx -> becomes +25261xxxx
+    const ussd = buildUssd(amount);
+    ussdCodeEl.textContent = ussd;
 
-      const ussd = buildUssd(amount);
-      ussdCodeEl.textContent = ussd;
-
-      if (isMobile()) {
-        // Open phone dialer with USSD prefilled
+    if(isMobile()){
         const href = ussdToTelHref(ussd);
-        // First save a pending transaction (status: Pending)
         const tx = {
-          id: Date.now(),
-          name, amount, evc, merchant: MERCHANT_NUMBER,
-          ussd, date: new Date().toLocaleString(), status: 'Pending'
+            id: Date.now(),
+            name, amount,
+            evc, oneXbetId,
+            merchant: MERCHANT_NUMBER,
+            ussd,
+            date: new Date().toLocaleString(),
+            status: 'Pending'
         };
         saveTransaction(tx);
         renderHistory();
-
-        // Show afterSend UI
         afterSend.classList.remove('hidden');
-
-        // Open dialer (this will open phone's dialer with the USSD string)
-        // Use setTimeout so UI updates before navigation
-        setTimeout(() => {
-          window.location.href = href;
-        }, 300);
-      } else {
-        // Desktop fallback: show preview and copy instructions
+        // open dialer after tiny delay (allow UI update)
+        setTimeout(()=>{ window.location.href = href; }, 300);
+    } else {
         previewArea.classList.remove('hidden');
-        alert('You are on desktop. The dialer cannot be opened. Copy the USSD code and paste it on your phone to send.');
-      }
-    });
+        alert('You are on desktop — copy the USSD code and paste it on your phone to complete payment.');
+    }
+});
 
-    // Done -> send WhatsApp confirmation and mark transaction Success
-    doneBtn.addEventListener('click', () => {
-      // Get the latest pending transaction
-      const arr = loadTransactions();
-      const pending = arr.find(t => t.status === 'Pending') || arr[0];
-      if (!pending) {
-        alert('No pending transaction found.');
-        return;
-      }
+doneBtn.addEventListener('click', ()=>{
+    const arr = loadTransactions();
+    const pending = arr.find(t=>t.status==='Pending') || arr[0];
+    if(!pending){ alert('No pending transaction found.'); return; }
 
-      // Update status to Success
-      pending.status = 'Success';
-      // replace in storage
-      const rest = arr.filter(t => t.id !== pending.id);
-      rest.unshift(pending);
-      localStorage.setItem('transactions', JSON.stringify(rest));
-
-      renderHistory();
-      afterSend.classList.add('hidden');
-
-      // Prepare WhatsApp message
-      const msg = encodeURIComponent(
-        `Hello Qanciye Exchange Team,\nI just sent EVC payment for 1xBet exchange.\nName: ${pending.name}\nAmount: ${pending.amount}\nEVC Number: ${pending.evc}\nUSSD used: ${pending.ussd}`
-      );
-
-      // Open WhatsApp chat (uses wa.me)
-      const waUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`;
-      window.open(waUrl, '_blank');
-    });
-
-    cancelBtn.addEventListener('click', () => {
-      afterSend.classList.add('hidden');
-      // Optionally remove the last pending tx
-      const arr = loadTransactions();
-      const rest = arr.filter(t => t.status !== 'Pending');
-      localStorage.setItem('transactions', JSON.stringify(rest));
-      renderHistory();
-    });
-
-    // Clear history
-    clearHistory.addEventListener('click', () => {
-      if (confirm('Clear all transaction history?')) {
-        localStorage.removeItem('transactions');
-        renderHistory();
-      }
-    });
-
-    // Init
+    // mark success
+    pending.status = 'Success';
+    const rest = arr.filter(t=>t.id !== pending.id);
+    rest.unshift(pending);
+    localStorage.setItem('transactions', JSON.stringify(rest));
     renderHistory();
-  </script>
+    afterSend.classList.add('hidden');
+
+    // prepare WhatsApp message including 1xBet ID
+    const msg = encodeURIComponent(
+`Hello Qanciye Exchange Team,
+I have sent EVC payment for 1xBet exchange.
+Name: ${pending.name}
+Amount: ${pending.amount}
+EVC Number: ${pending.evc}
+1xBet ID: ${pending.oneXbetId}
+USSD used: ${pending.ussd}
+Please verify and credit my 1xBet account. Thank you.`
+    );
+
+    const waUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`;
+    window.open(waUrl, '_blank');
+});
+
+cancelBtn.addEventListener('click', ()=>{
+    afterSend.classList.add('hidden');
+    const arr = loadTransactions();
+    const rest = arr.filter(t=>t.status !== 'Pending');
+    localStorage.setItem('transactions', JSON.stringify(rest));
+    renderHistory();
+});
+
+clearHistory.addEventListener('click', ()=>{
+    if(confirm('Clear all transaction history?')){ localStorage.removeItem('transactions'); renderHistory(); }
+});
+
+// Init
+renderHistory();
+</script>
+
 </body>
 </html>
