@@ -7,16 +7,42 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        
         .fade-in {
             animation: fadeIn 0.5s ease-in-out;
         }
+        
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
+        
+        .slide-in {
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(-100%); }
+            to { transform: translateX(0); }
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #ffffff 0%, #f0f9ff 100%);
+        }
+        
+        .shadow-custom {
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+        
         .nav-link {
             position: relative;
         }
+        
         .nav-link::after {
             content: '';
             position: absolute;
@@ -27,66 +53,163 @@
             background-color: #0ea5e9;
             transition: width 0.3s ease;
         }
+        
         .nav-link:hover::after {
             width: 100%;
         }
-        .gradient-bg {
-            background: linear-gradient(135deg, #ffffff 0%, #e0f2fe 100%);
+        
+        .login-card {
+            background: linear-gradient(145deg, #ffffff 0%, #f8fdff 100%);
+            box-shadow: 0 10px 30px rgba(14, 165, 233, 0.15);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
         }
-        .shadow-custom {
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        
+        .input-field {
+            transition: all 0.3s ease;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .input-field:focus {
+            border-color: #0ea5e9;
+            box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(14, 165, 233, 0.3);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(100, 116, 139, 0.2);
+        }
+        
+        .mobile-menu {
+            transition: all 0.3s ease;
+        }
+        
+        .page-transition {
+            transition: all 0.3s ease;
+        }
+        
+        .floating-label {
+            position: absolute;
+            top: 50%;
+            left: 16px;
+            transform: translateY(-50%);
+            background: white;
+            padding: 0 4px;
+            transition: all 0.3s ease;
+            pointer-events: none;
+            color: #94a3b8;
+        }
+        
+        .input-container {
+            position: relative;
+        }
+        
+        .input-field:focus + .floating-label,
+        .input-field:not(:placeholder-shown) + .floating-label {
+            top: 0;
+            font-size: 0.75rem;
+            color: #0ea5e9;
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
         }
     </style>
 </head>
 <body class="gradient-bg font-sans min-h-screen flex flex-col">
 
 <!-- NAVBAR -->
-<nav class="bg-white shadow-md sticky top-0 z-50">
-    <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+<nav class="glass-effect shadow-md sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
         <a href="#" class="text-sky-700 font-bold text-xl flex items-center">
             <i class="fas fa-exchange-alt text-sky-500 mr-2"></i>
-            Qanciye Exchange
+            <span class="hidden sm:inline">Qanciye Exchange</span>
+            <span class="sm:hidden">Qanciye</span>
         </a>
+        
+        <!-- Desktop Menu -->
         <ul class="hidden md:flex gap-6">
-            <li><a href="#" class="nav-link text-gray-700 hover:text-sky-700" data-target="home">Home</a></li>
-            <li><a href="#" class="nav-link text-gray-700 hover:text-sky-700" data-target="exchange">Exchange</a></li>
-            <li><a href="#" class="nav-link text-gray-700 hover:text-sky-700" data-target="about">About</a></li>
-            <li><a href="#" class="nav-link text-gray-700 hover:text-sky-700" data-target="contact">Contact</a></li>
-            <li><a href="#" class="nav-link text-gray-700 hover:text-sky-700" data-target="login">Login/Signup</a></li>
+            <li><a href="#" class="nav-link text-gray-700 hover:text-sky-700 font-medium" data-target="home">Home</a></li>
+            <li><a href="#" class="nav-link text-gray-700 hover:text-sky-700 font-medium" data-target="exchange">Exchange</a></li>
+            <li><a href="#" class="nav-link text-gray-700 hover:text-sky-700 font-medium" data-target="about">About</a></li>
+            <li><a href="#" class="nav-link text-gray-700 hover:text-sky-700 font-medium" data-target="contact">Contact</a></li>
+            <li><a href="#" class="nav-link text-gray-700 hover:text-sky-700 font-medium" data-target="login">Login/Signup</a></li>
         </ul>
+        
+        <!-- Mobile Menu Button -->
         <div class="md:hidden">
-            <button id="mobileMenuBtn" class="text-sky-600">
+            <button id="mobileMenuBtn" class="text-sky-600 p-2 rounded-lg hover:bg-sky-50 transition-colors">
                 <i class="fas fa-bars text-xl"></i>
             </button>
         </div>
     </div>
     
     <!-- Mobile Menu -->
-    <div id="mobileMenu" class="hidden md:hidden bg-white py-4 px-6 absolute w-full left-0 top-full shadow-lg">
+    <div id="mobileMenu" class="mobile-menu hidden md:hidden bg-white py-4 px-6 absolute w-full left-0 top-full shadow-lg">
         <div class="flex flex-col space-y-4">
-            <a href="#" class="text-sky-600 hover:text-sky-800 font-medium transition-colors" data-target="home">Home</a>
-            <a href="#" class="text-sky-600 hover:text-sky-800 font-medium transition-colors" data-target="exchange">Exchange</a>
-            <a href="#" class="text-sky-600 hover:text-sky-800 font-medium transition-colors" data-target="about">About</a>
-            <a href="#" class="text-sky-600 hover:text-sky-800 font-medium transition-colors" data-target="contact">Contact</a>
-            <a href="#" class="text-sky-600 hover:text-sky-800 font-medium transition-colors" data-target="login">Login/Signup</a>
+            <a href="#" class="text-sky-600 hover:text-sky-800 font-medium transition-colors py-2" data-target="home">
+                <i class="fas fa-home mr-3"></i>Home
+            </a>
+            <a href="#" class="text-sky-600 hover:text-sky-800 font-medium transition-colors py-2" data-target="exchange">
+                <i class="fas fa-exchange-alt mr-3"></i>Exchange
+            </a>
+            <a href="#" class="text-sky-600 hover:text-sky-800 font-medium transition-colors py-2" data-target="about">
+                <i class="fas fa-info-circle mr-3"></i>About
+            </a>
+            <a href="#" class="text-sky-600 hover:text-sky-800 font-medium transition-colors py-2" data-target="contact">
+                <i class="fas fa-phone-alt mr-3"></i>Contact
+            </a>
+            <a href="#" class="text-sky-600 hover:text-sky-800 font-medium transition-colors py-2" data-target="login">
+                <i class="fas fa-user mr-3"></i>Login/Signup
+            </a>
         </div>
     </div>
 </nav>
 
-<main class="flex-grow max-w-4xl mx-auto mt-10 px-6 pb-16">
-
+<main class="flex-grow max-w-4xl mx-auto w-full px-4 py-6 pb-16">
     <!-- HOME -->
     <section id="home" class="page fade-in">
-        <h1 class="text-3xl md:text-5xl font-bold text-sky-700 text-center">Qanciye Exchange</h1>
-        <p class="mt-4 text-gray-600 text-center text-lg">EVC Plus to 1xBet Exchange — Safe, Fast & Mobile‑Friendly</p>
-        <div class="text-center mt-6">
-            <button class="bg-sky-600 text-white px-8 py-3 rounded-xl hover:bg-sky-700 transition" data-target="exchange">Start Exchanging</button>
+        <div class="text-center mb-10">
+            <h1 class="text-3xl md:text-5xl font-bold text-sky-700">💸 Qanciye Exchange</h1>
+            <p class="mt-4 text-gray-600 text-lg">EVC Plus to 1xBet Exchange — Safe, Fast & Mobile‑Friendly</p>
+            <div class="mt-6">
+                <button class="btn-primary text-white px-8 py-3 rounded-xl font-medium pulse" data-target="exchange">
+                    Start Exchanging
+                </button>
+            </div>
         </div>
         
-        <div class="mt-12 grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div class="bg-white p-6 rounded-2xl shadow-custom">
                 <div class="flex justify-center mb-4">
-                    <div class="w-16 h-16 bg-sky-100 rounded-full flex items-center justify-center">
+                    <div class="w-16 h-16 bg-gradient-to-r from-sky-100 to-blue-100 rounded-full flex items-center justify-center">
                         <i class="fas fa-exchange-alt text-sky-500 text-2xl"></i>
                     </div>
                 </div>
@@ -113,7 +236,7 @@
             
             <div class="bg-white p-6 rounded-2xl shadow-custom">
                 <div class="flex justify-center mb-4">
-                    <div class="w-16 h-16 bg-sky-100 rounded-full flex items-center justify-center">
+                    <div class="w-16 h-16 bg-gradient-to-r from-sky-100 to-blue-100 rounded-full flex items-center justify-center">
                         <i class="fas fa-shield-alt text-sky-500 text-2xl"></i>
                     </div>
                 </div>
@@ -131,91 +254,148 @@
 
     <!-- LOGIN / SIGNUP -->
     <section id="login" class="page hidden fade-in">
-        <div class="max-w-md mx-auto bg-white p-8 rounded-3xl shadow-lg">
-            <h2 class="text-2xl font-semibold text-sky-700 mb-6 text-center" id="loginTitle">Login</h2>
-            <form id="authForm" class="space-y-4">
+        <div class="max-w-md mx-auto login-card p-8 rounded-3xl">
+            <div class="text-center mb-2">
+                <div class="w-20 h-20 bg-gradient-to-r from-sky-500 to-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-user-lock text-white text-3xl"></i>
+                </div>
+                <h2 class="text-2xl font-bold text-sky-700" id="loginTitle">Welcome Back</h2>
+                <p class="text-gray-500 mt-2" id="loginSubtitle">Sign in to your account</p>
+            </div>
+            
+            <form id="authForm" class="space-y-5 mt-6">
                 <div id="nameDiv" class="hidden">
-                    <label class="block text-gray-700 font-medium">Full Name</label>
-                    <input type="text" id="authName" class="w-full mt-1 p-3 border rounded-xl" placeholder="Your Name">
+                    <div class="input-container">
+                        <input type="text" id="authName" class="input-field w-full p-4 rounded-xl" placeholder=" ">
+                        <label class="floating-label">Full Name</label>
+                    </div>
                 </div>
-                <div>
-                    <label class="block text-gray-700 font-medium">Username</label>
-                    <input type="text" id="authUsername" class="w-full mt-1 p-3 border rounded-xl" placeholder="Username">
+                
+                <div class="input-container">
+                    <input type="text" id="authUsername" class="input-field w-full p-4 rounded-xl" placeholder=" ">
+                    <label class="floating-label">Username</label>
                 </div>
-                <div>
-                    <label class="block text-gray-700 font-medium">Password</label>
-                    <input type="password" id="authPassword" class="w-full mt-1 p-3 border rounded-xl" placeholder="Password">
+                
+                <div class="input-container">
+                    <input type="password" id="authPassword" class="input-field w-full p-4 rounded-xl" placeholder=" ">
+                    <label class="floating-label">Password</label>
                 </div>
-                <button type="submit" class="w-full bg-sky-600 text-white py-3 rounded-xl hover:bg-sky-700 transition" id="authBtn">Login</button>
+                
+                <button type="submit" class="btn-primary w-full text-white py-4 rounded-xl font-medium text-lg" id="authBtn">
+                    Sign In
+                </button>
             </form>
-            <p class="text-sm mt-3 text-gray-600 text-center" id="authSwitch">Don't have an account? <span class="text-sky-700 cursor-pointer" id="switchAuth">Signup</span></p>
+            
+            <div class="mt-6 text-center">
+                <p class="text-sm text-gray-600" id="authSwitch">Don't have an account? 
+                    <span class="text-sky-700 cursor-pointer font-medium" id="switchAuth">Create Account</span>
+                </p>
+            </div>
+            
+            <div class="mt-8 pt-6 border-t border-gray-100">
+                <div class="flex justify-center space-x-4">
+                    <button class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center hover:bg-gray-200 transition-colors">
+                        <i class="fab fa-google text-gray-600"></i>
+                    </button>
+                    <button class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center hover:bg-gray-200 transition-colors">
+                        <i class="fab fa-facebook-f text-gray-600"></i>
+                    </button>
+                    <button class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center hover:bg-gray-200 transition-colors">
+                        <i class="fab fa-twitter text-gray-600"></i>
+                    </button>
+                </div>
+            </div>
         </div>
     </section>
 
     <!-- EXCHANGE -->
     <section id="exchange" class="page hidden fade-in">
-        <div class="bg-white p-8 rounded-3xl shadow-lg">
-            <h2 class="text-2xl font-semibold text-sky-700 mb-6 text-center"> Exchange EVC to 1xBet</h2>
-            <form id="exchangeForm" class="space-y-4">
-                <div>
-                    <label class="block text-gray-700 font-medium">Full Name</label>
-                    <input id="name" required class="w-full mt-1 p-3 border rounded-xl" placeholder="Your Name">
+        <div class="bg-white p-6 md:p-8 rounded-3xl shadow-custom">
+            <h2 class="text-2xl font-bold text-sky-700 mb-6 text-center">💰 Exchange EVC to 1xBet</h2>
+            <form id="exchangeForm" class="space-y-5">
+                <div class="input-container">
+                    <input id="name" required class="input-field w-full p-4 rounded-xl" placeholder=" ">
+                    <label class="floating-label">Full Name</label>
                 </div>
-                <div>
-                    <label class="block text-gray-700 font-medium">Amount</label>
-                    <input id="amount" required inputmode="numeric" pattern="[0-9]*" class="w-full mt-1 p-3 border rounded-xl" placeholder="e.g. 50">
+                
+                <div class="input-container">
+                    <input id="amount" required inputmode="numeric" pattern="[0-9]*" class="input-field w-full p-4 rounded-xl" placeholder=" ">
+                    <label class="floating-label">Amount (SOS)</label>
                 </div>
-                <div>
-                    <label class="block text-gray-700 font-medium">EVC Number (sender)</label>
-                    <input id="evcNumber" required inputmode="tel" class="w-full mt-1 p-3 border rounded-xl" placeholder="0612345678">
-                    <p class="text-xs text-gray-500 mt-1">If you enter 0612345678 it will be converted to +252612345678 automatically.</p>
+                
+                <div class="input-container">
+                    <input id="evcNumber" required inputmode="tel" class="input-field w-full p-4 rounded-xl" placeholder=" ">
+                    <label class="floating-label">EVC Number (sender)</label>
+                    <p class="text-xs text-gray-500 mt-2">If you enter 0612345678 it will be converted to +252612345678 automatically.</p>
                 </div>
-                <div>
-                    <label class="block text-gray-700 font-medium">1xBet ID (receiver account)</label>
-                    <input id="oneXbetId" required class="w-full mt-1 p-3 border rounded-xl" placeholder="Your 1xBet ID (e.g. 12345678)">
-                    <p class="text-xs text-gray-500 mt-1">Enter your 1xBet account ID so admin can credit your 1xBet balance after verification.</p>
+                
+                <div class="input-container">
+                    <input id="oneXbetId" required class="input-field w-full p-4 rounded-xl" placeholder=" ">
+                    <label class="floating-label">1xBet ID (receiver account)</label>
+                    <p class="text-xs text-gray-500 mt-2">Enter your 1xBet account ID so admin can credit your 1xBet balance after verification.</p>
                 </div>
-                <div class="flex gap-3 mt-4">
-                    <button id="sendBtn" type="button" class="flex-1 bg-sky-600 text-white py-3 rounded-xl hover:bg-sky-700 transition">Send (Phone Keypad)</button>
-                    <button id="previewBtn" type="button" class="flex-1 bg-gray-100 py-3 rounded-xl hover:bg-sky-50 transition">Preview Code</button>
+                
+                <div class="flex flex-col sm:flex-row gap-3 mt-6">
+                    <button id="sendBtn" type="button" class="btn-primary flex-1 text-white py-4 rounded-xl font-medium">
+                        <i class="fas fa-mobile-alt mr-2"></i> Send (Phone Keypad)
+                    </button>
+                    <button id="previewBtn" type="button" class="btn-secondary flex-1 py-4 rounded-xl font-medium">
+                        <i class="fas fa-eye mr-2"></i> Preview Code
+                    </button>
                 </div>
             </form>
 
-            <div id="previewArea" class="mt-4 hidden">
-                <p class="text-sm text-gray-700">USSD Code:</p>
-                <div class="mt-2 flex items-center gap-2">
-                    <code id="ussdCode" class="flex-1 bg-gray-100 p-3 rounded-lg text-sm"></code>
-                    <button id="copyCode" class="px-3 py-2 bg-sky-600 text-white rounded-lg hover:bg-sky-700">Copy</button>
+            <div id="previewArea" class="mt-6 hidden">
+                <p class="text-sm text-gray-700 font-medium">USSD Code:</p>
+                <div class="mt-2 flex flex-col sm:flex-row items-center gap-3">
+                    <code id="ussdCode" class="flex-1 bg-gray-100 p-4 rounded-lg text-sm font-mono break-all"></code>
+                    <button id="copyCode" class="btn-primary px-5 py-3 text-white rounded-lg font-medium whitespace-nowrap">
+                        <i class="fas fa-copy mr-2"></i> Copy
+                    </button>
                 </div>
             </div>
 
             <div id="afterSend" class="mt-6 hidden">
-                <p class="text-green-600 font-medium">USSD opened. After sending, click "Done" to notify via WhatsApp (automatic message includes 1xBet ID).</p>
-                <div class="mt-3 flex gap-3">
-                    <button id="doneBtn" class="flex-1 bg-green-600 text-white py-3 rounded-xl hover:bg-green-700">Done — WhatsApp</button>
-                    <button id="cancelBtn" class="flex-1 bg-gray-100 py-3 rounded-xl hover:bg-gray-200">Cancel</button>
+                <div class="bg-green-50 border border-green-200 rounded-xl p-4">
+                    <div class="flex items-start">
+                        <i class="fas fa-check-circle text-green-500 text-xl mt-1 mr-3"></i>
+                        <div>
+                            <p class="text-green-700 font-medium">USSD opened. After sending, click "Done" to notify via WhatsApp.</p>
+                            <p class="text-green-600 text-sm mt-1">Automatic message includes your 1xBet ID for verification.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-4 flex flex-col sm:flex-row gap-3">
+                    <button id="doneBtn" class="btn-primary flex-1 text-white py-4 rounded-xl font-medium">
+                        <i class="fab fa-whatsapp mr-2"></i> Done — WhatsApp
+                    </button>
+                    <button id="cancelBtn" class="btn-secondary flex-1 py-4 rounded-xl font-medium">
+                        <i class="fas fa-times mr-2"></i> Cancel
+                    </button>
                 </div>
             </div>
         </div>
 
-        <section class="mt-6">
-            <h2 class="text-lg font-semibold text-gray-800 mb-2">Transaction History</h2>
-            <ul id="historyList" class="space-y-2"></ul>
-            <div class="mt-3">
-                <button id="clearHistory" class="text-sm text-red-600">🗑 Clear History</button>
+        <section class="mt-8">
+            <h2 class="text-lg font-semibold text-gray-800 mb-4">Transaction History</h2>
+            <ul id="historyList" class="space-y-3"></ul>
+            <div class="mt-4">
+                <button id="clearHistory" class="text-sm text-red-600 hover:text-red-700 font-medium">
+                    <i class="fas fa-trash-alt mr-1"></i> Clear History
+                </button>
             </div>
         </section>
     </section>
 
     <!-- ABOUT -->
     <section id="about" class="page hidden fade-in">
-        <h2 class="text-2xl font-semibold text-sky-700 mb-4">About Qanciye Exchange</h2>
+        <h2 class="text-2xl font-bold text-sky-700 mb-4">About Qanciye Exchange</h2>
         <p class="text-gray-600 leading-relaxed">Qanciye Exchange is a professional, mobile-friendly platform to simulate EVC Plus payments to 1xBet. It helps users understand and complete their transactions in a safe and reliable way. We provide manual verification via WhatsApp to ensure funds are credited correctly.</p>
         
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
             <div class="bg-white p-6 rounded-xl shadow-custom">
                 <div class="flex items-center mb-4">
-                    <div class="w-12 h-12 bg-sky-100 rounded-full flex items-center justify-center mr-4">
+                    <div class="w-12 h-12 bg-gradient-to-r from-sky-100 to-blue-100 rounded-full flex items-center justify-center mr-4">
                         <i class="fas fa-bullseye text-sky-500 text-xl"></i>
                     </div>
                     <h3 class="text-xl font-bold text-sky-700">Our Mission</h3>
@@ -225,7 +405,7 @@
             
             <div class="bg-white p-6 rounded-xl shadow-custom">
                 <div class="flex items-center mb-4">
-                    <div class="w-12 h-12 bg-sky-100 rounded-full flex items-center justify-center mr-4">
+                    <div class="w-12 h-12 bg-gradient-to-r from-sky-100 to-blue-100 rounded-full flex items-center justify-center mr-4">
                         <i class="fas fa-shield-alt text-sky-500 text-xl"></i>
                     </div>
                     <h3 class="text-xl font-bold text-sky-700">Security & Reliability</h3>
@@ -237,25 +417,25 @@
 
     <!-- CONTACT -->
     <section id="contact" class="page hidden fade-in">
-        <h2 class="text-2xl font-semibold text-sky-700 mb-4">Contact Us</h2>
-        <p class="text-gray-600">WhatsApp: <a href="https://wa.me/+252615444857" target="_blank" class="text-sky-600">+252 615444857</a></p>
-        <p class="text-gray-600">Email: <a href="mailto:support@qanciyexchange.com" class="text-sky-600">support@qanciyexchange.com</a></p>
+        <h2 class="text-2xl font-bold text-sky-700 mb-4">Contact Us</h2>
+        <p class="text-gray-600">WhatsApp: <a href="https://wa.me/252615444857" target="_blank" class="text-sky-600 font-medium">+252615444857</a></p>
+        <p class="text-gray-600">Email: <a href="mailto:support@qanciyexchange.com" class="text-sky-600 font-medium">support@qanciyexchange.com</a></p>
         
         <div class="bg-white p-6 rounded-xl shadow-custom mt-6">
             <h3 class="text-xl font-bold text-sky-700 mb-4">Get In Touch</h3>
             <div class="space-y-4">
                 <div class="flex items-start">
-                    <div class="w-10 h-10 bg-sky-100 rounded-full flex items-center justify-center mr-4">
+                    <div class="w-10 h-10 bg-gradient-to-r from-sky-100 to-blue-100 rounded-full flex items-center justify-center mr-4">
                         <i class="fab fa-whatsapp text-green-500"></i>
                     </div>
                     <div>
                         <h4 class="font-bold text-gray-800">WhatsApp</h4>
-                        <p class="text-gray-600">+252615444857</p>
+                        <p class="text-gray-600">+252 615444857</p>
                     </div>
                 </div>
                 
                 <div class="flex items-start">
-                    <div class="w-10 h-10 bg-sky-100 rounded-full flex items-center justify-center mr-4">
+                    <div class="w-10 h-10 bg-gradient-to-r from-sky-100 to-blue-100 rounded-full flex items-center justify-center mr-4">
                         <i class="fas fa-envelope text-sky-500"></i>
                     </div>
                     <div>
@@ -265,7 +445,7 @@
                 </div>
                 
                 <div class="flex items-start">
-                    <div class="w-10 h-10 bg-sky-100 rounded-full flex items-center justify-center mr-4">
+                    <div class="w-10 h-10 bg-gradient-to-r from-sky-100 to-blue-100 rounded-full flex items-center justify-center mr-4">
                         <i class="fas fa-clock text-sky-500"></i>
                     </div>
                     <div>
@@ -281,7 +461,7 @@
 
 <!-- FOOTER -->
 <footer class="bg-sky-800 text-white py-8 mt-12">
-    <div class="max-w-7xl mx-auto px-6">
+    <div class="max-w-7xl mx-auto px-4">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div>
                 <div class="flex items-center mb-4">
@@ -306,7 +486,7 @@
                 <ul class="space-y-2">
                     <li class="flex items-start">
                         <i class="fab fa-whatsapp text-green-400 mt-1 mr-2"></i>
-                        <span class="text-sky-100">+252615444857</span>
+                        <span class="text-sky-100">+252 615444857</span>
                     </li>
                     <li class="flex items-start">
                         <i class="fas fa-envelope text-sky-300 mt-1 mr-2"></i>
@@ -330,9 +510,18 @@ const mobileMenuBtn = document.getElementById('mobileMenuBtn');
 const mobileMenu = document.getElementById('mobileMenu');
 
 function showPage(id){
-    pages.forEach(p => p.classList.add('hidden'));
+    pages.forEach(p => {
+        p.classList.add('hidden');
+        p.classList.remove('fade-in');
+    });
+    
     const page = document.getElementById(id);
-    if(page) page.classList.remove('hidden');
+    if(page) {
+        page.classList.remove('hidden');
+        // Trigger reflow to enable animation
+        void page.offsetWidth;
+        page.classList.add('fade-in');
+    }
     
     // Close mobile menu when navigating
     mobileMenu.classList.add('hidden');
@@ -351,6 +540,13 @@ mobileMenuBtn.addEventListener('click', () => {
     mobileMenu.classList.toggle('hidden');
 });
 
+// Close mobile menu when clicking outside
+document.addEventListener('click', (e) => {
+    if (!mobileMenu.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
+        mobileMenu.classList.add('hidden');
+    }
+});
+
 // Config
 const MERCHANT_NUMBER = '615444857';
 const WHATSAPP_NUMBER = '252615444857';
@@ -362,6 +558,7 @@ let currentUser = null;
 const authForm = document.getElementById('authForm');
 const authBtn = document.getElementById('authBtn');
 const authTitle = document.getElementById('loginTitle');
+const loginSubtitle = document.getElementById('loginSubtitle');
 const switchAuth = document.getElementById('switchAuth');
 const nameDiv = document.getElementById('nameDiv');
 const startBtns = document.querySelectorAll('[data-target="exchange"]');
@@ -372,8 +569,23 @@ function getUsers(){ return JSON.parse(localStorage.getItem('users')||'[]'); }
 function saveUser(user){ const arr=getUsers(); arr.push(user); localStorage.setItem('users', JSON.stringify(arr)); }
 function findUser(username,password){ return getUsers().find(u=>u.username===username && u.password===password); }
 
-function showLogin(){ isLoginMode=true; authTitle.textContent='Login'; authBtn.textContent='Login'; nameDiv.classList.add('hidden'); switchAuth.textContent='Signup'; }
-function showSignup(){ isLoginMode=false; authTitle.textContent='Signup'; authBtn.textContent='Signup'; nameDiv.classList.remove('hidden'); switchAuth.textContent='Login'; }
+function showLogin(){ 
+    isLoginMode=true; 
+    authTitle.textContent='Welcome Back'; 
+    loginSubtitle.textContent='Sign in to your account';
+    authBtn.textContent='Sign In'; 
+    nameDiv.classList.add('hidden'); 
+    switchAuth.textContent='Create Account'; 
+}
+
+function showSignup(){ 
+    isLoginMode=false; 
+    authTitle.textContent='Create Account'; 
+    loginSubtitle.textContent='Sign up for a new account';
+    authBtn.textContent='Sign Up'; 
+    nameDiv.classList.remove('hidden'); 
+    switchAuth.textContent='Sign In'; 
+}
 
 switchAuth.addEventListener('click', ()=> { isLoginMode ? showSignup() : showLogin(); });
 
@@ -381,19 +593,31 @@ authForm.addEventListener('submit', e=>{
     e.preventDefault();
     const username = document.getElementById('authUsername').value.trim();
     const password = document.getElementById('authPassword').value.trim();
-    const name = document.getElementById('authName').value.trim();
+    const name = document.getElementById('authName')?.value.trim() || '';
+    
     if(isLoginMode){
         const user = findUser(username,password);
-        if(!user){ alert('Invalid credentials'); return; }
+        if(!user){ 
+            showError('Invalid credentials'); 
+            return; 
+        }
         currentUser = user;
+        showSuccess('Login successful!');
     } else {
-        if(!name){ alert('Enter full name'); return; }
-        if(getUsers().some(u=>u.username===username)){ alert('Username taken'); return; }
+        if(!name && !isLoginMode){ 
+            showError('Enter full name'); 
+            return; 
+        }
+        if(getUsers().some(u=>u.username===username)){ 
+            showError('Username taken'); 
+            return; 
+        }
         const user = { name, username, password };
         saveUser(user);
         currentUser = user;
-        alert('Signup successful');
+        showSuccess('Account created successfully!');
     }
+    
     loginSection.classList.add('hidden');
     exchangeSection.classList.remove('hidden');
     document.getElementById('name').value = currentUser.name;
@@ -430,26 +654,72 @@ const clearHistory = el('clearHistory');
 
 function loadTransactions(){ return JSON.parse(localStorage.getItem('transactions')||'[]'); }
 function saveTransaction(tx){ const arr = loadTransactions(); arr.unshift(tx); localStorage.setItem('transactions', JSON.stringify(arr)); }
+
 function renderHistory(){
     const arr = loadTransactions();
     historyList.innerHTML = arr.map(t=>`
-        <li class="p-3 bg-white rounded-xl shadow-sm border flex justify-between items-start gap-4">
+        <li class="p-4 bg-white rounded-xl shadow-sm border flex flex-col sm:flex-row justify-between items-start gap-3">
             <div class="flex-1">
                 <div class="font-medium">${t.name} • ${t.amount} SOS</div>
-                <div class="text-xs text-gray-500">${t.date}</div>
+                <div class="text-xs text-gray-500 mt-1">${t.date}</div>
                 <div class="text-xs text-gray-500 mt-1">EVC: ${t.evc}</div>
                 <div class="text-xs text-gray-500">1xBet ID: ${t.oneXbetId || '-'}</div>
             </div>
-            <div class="text-sm ${t.status==='Success'?'text-green-600':'text-yellow-600'}">${t.status}</div>
-        </li>`).join('') || '<li class="text-sm text-gray-500">No transactions yet.</li>';
+            <div class="text-sm ${t.status==='Success'?'text-green-600':'text-yellow-600'} font-medium">
+                ${t.status}
+            </div>
+        </li>`).join('') || '<li class="text-sm text-gray-500 p-4 text-center">No transactions yet.</li>';
 }
 
-function buildUssd(amount){ const digits = String(amount).replace(/[^\d.]/g,''); return `*712*${MERCHANT_NUMBER}*${digits}#`; }
-function ussdToTelHref(ussd){ return 'tel:'+encodeURIComponent(ussd).replace(/%2A/g,'*').replace(/%23/g,'%23'); }
+function buildUssd(amount){ 
+    const digits = String(amount).replace(/[^\d.]/g,''); 
+    return `*712*${MERCHANT_NUMBER}*${digits}#`; 
+}
+
+function ussdToTelHref(ussd){ 
+    return 'tel:'+encodeURIComponent(ussd).replace(/%2A/g,'*').replace(/%23/g,'%23'); 
+}
+
+function showSuccess(message) {
+    // Create a temporary success message
+    const successEl = document.createElement('div');
+    successEl.className = 'fixed top-4 right-4 bg-green-500 text-white p-4 rounded-lg shadow-lg z-50 fade-in';
+    successEl.innerHTML = `
+        <div class="flex items-center">
+            <i class="fas fa-check-circle mr-2"></i>
+            <span>${message}</span>
+        </div>
+    `;
+    document.body.appendChild(successEl);
+    
+    setTimeout(() => {
+        successEl.remove();
+    }, 3000);
+}
+
+function showError(message) {
+    // Create a temporary error message
+    const errorEl = document.createElement('div');
+    errorEl.className = 'fixed top-4 right-4 bg-red-500 text-white p-4 rounded-lg shadow-lg z-50 fade-in';
+    errorEl.innerHTML = `
+        <div class="flex items-center">
+            <i class="fas fa-exclamation-circle mr-2"></i>
+            <span>${message}</span>
+        </div>
+    `;
+    document.body.appendChild(errorEl);
+    
+    setTimeout(() => {
+        errorEl.remove();
+    }, 3000);
+}
 
 previewBtn.addEventListener('click', ()=>{
     const amount = el('amount').value.trim();
-    if(!amount){ alert('Enter amount'); return; }
+    if(!amount){ 
+        showError('Please enter an amount'); 
+        return; 
+    }
     const ussd = buildUssd(amount);
     ussdCodeEl.textContent = ussd;
     previewArea.classList.remove('hidden');
@@ -458,8 +728,12 @@ previewBtn.addEventListener('click', ()=>{
 previewCopy.addEventListener('click', async ()=>{
     const code = ussdCodeEl.textContent;
     if(!code) return;
-    await navigator.clipboard.writeText(code);
-    alert('USSD code copied');
+    try {
+        await navigator.clipboard.writeText(code);
+        showSuccess('USSD code copied to clipboard!');
+    } catch (err) {
+        showError('Failed to copy code');
+    }
 });
 
 sendBtn.addEventListener('click', ()=>{
@@ -468,7 +742,10 @@ sendBtn.addEventListener('click', ()=>{
     let evc = el('evcNumber').value.trim();
     const oneXbetId = el('oneXbetId').value.trim();
 
-    if(!name || !amount || !evc || !oneXbetId){ alert('Fill all fields (including 1xBet ID)'); return; }
+    if(!name || !amount || !evc || !oneXbetId){ 
+        showError('Please fill all fields (including 1xBet ID)'); 
+        return; 
+    }
 
     evc = evc.replace(/\s+/g,'');
     if(evc.startsWith('0')) evc = '+252' + evc.slice(1);
@@ -495,14 +772,17 @@ sendBtn.addEventListener('click', ()=>{
         setTimeout(()=>{ window.location.href = href; }, 300);
     } else {
         previewArea.classList.remove('hidden');
-        alert('You are on desktop — copy the USSD code and paste it on your phone to complete payment.');
+        showError('You are on desktop — copy the USSD code and paste it on your phone to complete payment.');
     }
 });
 
 doneBtn.addEventListener('click', ()=>{
     const arr = loadTransactions();
     const pending = arr.find(t=>t.status==='Pending') || arr[0];
-    if(!pending){ alert('No pending transaction found.'); return; }
+    if(!pending){ 
+        showError('No pending transaction found.'); 
+        return; 
+    }
 
     // mark success
     pending.status = 'Success';
@@ -517,7 +797,7 @@ doneBtn.addEventListener('click', ()=>{
 `Hello Qanciye Exchange Team,
 I have sent EVC payment for 1xBet exchange.
 Name: ${pending.name}
-Amount: ${pending.amount}
+Amount: ${pending.amount} SOS
 EVC Number: ${pending.evc}
 1xBet ID: ${pending.oneXbetId}
 USSD used: ${pending.ussd}
@@ -534,14 +814,38 @@ cancelBtn.addEventListener('click', ()=>{
     const rest = arr.filter(t=>t.status !== 'Pending');
     localStorage.setItem('transactions', JSON.stringify(rest));
     renderHistory();
+    showSuccess('Transaction cancelled');
 });
 
 clearHistory.addEventListener('click', ()=>{
-    if(confirm('Clear all transaction history?')){ localStorage.removeItem('transactions'); renderHistory(); }
+    if(confirm('Clear all transaction history?')){ 
+        localStorage.removeItem('transactions'); 
+        renderHistory(); 
+        showSuccess('History cleared');
+    }
+});
+
+// Initialize floating labels
+document.querySelectorAll('.input-field').forEach(input => {
+    input.addEventListener('focus', function() {
+        this.parentNode.classList.add('focused');
+    });
+    
+    input.addEventListener('blur', function() {
+        if (!this.value) {
+            this.parentNode.classList.remove('focused');
+        }
+    });
+    
+    // Check on page load if inputs have values
+    if (input.value) {
+        input.parentNode.classList.add('focused');
+    }
 });
 
 // Init
 renderHistory();
+showPage('home');
 </script>
 
 </body>
